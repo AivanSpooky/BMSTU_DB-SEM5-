@@ -1,0 +1,1 @@
+sqlcmd -S LAPTOP-7106M2BU -d GamingPlatform -i "C:\Users\User\Desktop\учеба\бауманка\5-sem\DB\lab_01\insert_data.sql" -E
