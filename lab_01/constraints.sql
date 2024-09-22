@@ -21,11 +21,27 @@ GO
 ALTER TABLE Users
 	ALTER COLUMN AccountStatus BIT NOT NULL;
 GO
+ALTER TABLE Users
+    ADD CONSTRAINT D_AccountStatus DEFAULT 0 FOR AccountStatus;
+GO
 
 -- Добавление ограничений к таблице Developers
 ALTER TABLE Developers
     ADD CONSTRAINT PK_Developers PRIMARY KEY (DeveloperID);
 GO
+ALTER TABLE Developers
+    ALTER COLUMN Name NVARCHAR(255) NOT NULL;
+GO
+
+-- Добавление ограничений к таблице Categories
+ALTER TABLE Categories
+	ADD CONSTRAINT PK_Categories PRIMARY KEY (CategoryID);
+GO
+ALTER TABLE Categories
+	ALTER COLUMN CategoryName NVARCHAR(100) NOT NULL;
+GO
+
+
 
 -- Добавление ограничений к таблице Games
 ALTER TABLE Games
@@ -38,9 +54,60 @@ ALTER TABLE Games
     ALTER COLUMN ReleaseDate DATE NOT NULL;
 GO
 ALTER TABLE Games
+	ALTER COLUMN CategoryID INT NOT NULL;
+GO
+ALTER TABLE Games
+	ALTER COLUMN DeveloperID INT NOT NULL;
+GO
+ALTER TABLE Games
+	ALTER COLUMN Price DECIMAL(10, 2) NOT NULL;
+GO
+ALTER TABLE Games
 	ADD CONSTRAINT FK_Games_Developers FOREIGN KEY (DeveloperID) 
 	REFERENCES Developers(DeveloperID);
 GO
+ALTER TABLE Games
+	ADD CONSTRAINT FK_Games_Categories FOREIGN KEY (CategoryID)
+	REFERENCES Categories(CategoryID)
+GO
+
+-- Добавление ограничений к таблице Orders
+ALTER TABLE Orders
+    ADD CONSTRAINT PK_Orders PRIMARY KEY (OrderID);
+GO
+ALTER TABLE Orders
+    ALTER COLUMN UserID NVARCHAR(255) NOT NULL;
+GO
+ALTER TABLE Orders
+    ALTER COLUMN GameID NVARCHAR(255) NOT NULL;
+GO
+ALTER TABLE Orders
+    ALTER COLUMN Price DECIMAL(10, 2) NOT NULL;
+GO
+ALTER TABLE Orders
+    ALTER COLUMN Quantity INT NOT NULL;
+GO
+ALTER TABLE Orders
+    ALTER COLUMN OrderDate DATE NOT NULL;
+GO
+ALTER TABLE Orders
+    ALTER COLUMN UserID INT;
+GO
+
+ALTER TABLE Orders
+    ALTER COLUMN GameID INT;
+GO
+ALTER TABLE Orders
+	ADD CONSTRAINT FK_Orders_Users FOREIGN KEY (UserID)
+	REFERENCES Users(UserID)
+	ON DELETE CASCADE;
+GO
+ALTER TABLE Orders
+	ADD CONSTRAINT FK_Orders_Games FOREIGN KEY (GameID)
+	REFERENCES Games(GameID)
+	ON DELETE CASCADE;
+GO
+
 
 -- Добавление ограничений к таблице Reviews
 ALTER TABLE Reviews
@@ -53,31 +120,9 @@ ALTER TABLE Reviews
     ALTER COLUMN GameID INT NOT NULL;
 GO
 ALTER TABLE Reviews
-    ALTER COLUMN DeveloperID INT NOT NULL;
-GO
-ALTER TABLE Reviews
-	ADD CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserID) 
-	REFERENCES Users(UserID);
-GO
-ALTER TABLE Reviews
-	ADD CONSTRAINT FK_Reviews_Games FOREIGN KEY (GameID) 
-	REFERENCES Games(GameID);
-GO
-ALTER TABLE Reviews
-	ADD CONSTRAINT FK_Reviews_Developers FOREIGN KEY (DeveloperID) 
-	REFERENCES Developers(DeveloperID);
-GO
-ALTER TABLE Reviews
-	ADD CONSTRAINT CHK_Reviews_GameRating CHECK (GameRating BETWEEN 1 AND 10);
-GO
-
-
-
-
-
-
-ALTER TABLE Reviews
-	DROP CONSTRAINT FK_Reviews_Games;
+	ADD CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserID)
+	REFERENCES Users(UserID)
+	ON DELETE CASCADE;
 GO
 ALTER TABLE Reviews
 	ADD CONSTRAINT FK_Reviews_Games FOREIGN KEY (GameID)
@@ -85,10 +130,5 @@ ALTER TABLE Reviews
 	ON DELETE CASCADE;
 GO
 ALTER TABLE Reviews
-	DROP CONSTRAINT FK_Reviews_Users;
-GO
-ALTER TABLE Reviews
-	ADD CONSTRAINT FK_Reviews_Users FOREIGN KEY (UserID)
-	REFERENCES Users(UserID)
-	ON DELETE CASCADE;
+	ADD CONSTRAINT CHK_Reviews_GameRating CHECK (GameRating BETWEEN 1 AND 10);
 GO

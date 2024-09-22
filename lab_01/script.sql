@@ -28,14 +28,36 @@ CREATE TABLE Developers (
 );
 GO
 
+-- Создание таблицы Categories без ограничений
+CREATE TABLE Categories (
+    CategoryID INT IDENTITY(1,1),
+    CategoryName NVARCHAR(100),
+    Description NVARCHAR(255)
+);
+GO
+
 -- Создание таблицы Games без ограничений
 CREATE TABLE Games (
     GameID INT IDENTITY(1,1),
     Title NVARCHAR(255),
     ReleaseDate DATE,
-    Genre NVARCHAR(100),
+    Description NVARCHAR(100),
+	CategoryID INT,
     DeveloperID INT,
-    MinSystemRequirements NVARCHAR(MAX)
+	Price DECIMAL(10, 2),
+    MinSystemRequirements NVARCHAR(MAX),
+	Discontinued BIT
+);
+GO
+
+-- Создание таблицы Orders без ограничений
+CREATE TABLE Orders (
+    OrderID INT IDENTITY(1,1),
+    UserID INT,
+    GameID INT,
+    Price DECIMAL(10, 2),
+    Quantity INT,
+    OrderDate DATE
 );
 GO
 
@@ -44,7 +66,6 @@ CREATE TABLE Reviews (
     ReviewID INT IDENTITY(1,1),
     UserID INT,
     GameID INT,
-    DeveloperID INT,
     ReviewText NVARCHAR(MAX),
     GameRating INT
 );
