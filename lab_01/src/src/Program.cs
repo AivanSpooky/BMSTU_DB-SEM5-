@@ -9,104 +9,6 @@ using Bogus.DataSets;
 using Faker;
 using Newtonsoft.Json;
 
-/*// Параметры подключения
-            string connectionString = "Server=LAPTOP-7106M2BU;Database=GamingPlatform;Trusted_Connection=True;";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-
-                // Генерация CSV для таблицы Users
-                using (StreamWriter writer = new StreamWriter("Users.csv"))
-                {
-                    writer.WriteLine("Username,Email,RegistrationDate,Country,AccountStatus");
-
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        string username = NameFaker.Name();
-                        string email = GenerateUniqueEmail(connection);
-                        DateTime registrationDate = DateTime.Now.AddDays(-_random.Next(0, 365));
-                        string country = LocationFaker.Country();
-                        bool accountStatus = _random.Next(0, 2) == 1;
-
-                        writer.WriteLine($"{username},{email},{registrationDate.ToString("yyyy-MM-dd")},{country},{accountStatus}");
-                    }
-                }
-
-                // Генерация CSV для таблицы Developers
-                using (StreamWriter writer = new StreamWriter("Developers.csv"))
-                {
-                    writer.WriteLine("Name,Country,Founded,Website,EmployeeCount");
-
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        string name = CompanyFaker.Name();
-                        string country = LocationFaker.Country();
-                        DateTime founded = DateTime.Now.AddYears(-_random.Next(1, 50));
-                        string website = InternetFaker.Domain();
-                        int employeeCount = _random.Next(1, 1000);
-
-                        writer.WriteLine($"{name},{country},{founded.ToString("yyyy-MM-dd")},{website},{employeeCount}");
-                    }
-                }
-
-                // Генерация CSV для таблицы Games
-                var developerIds = GetAllDeveloperIds(connection);
-                using (StreamWriter writer = new StreamWriter("Games.csv"))
-                {
-                    writer.WriteLine("Title,ReleaseDate,Genre,DeveloperID,MinSystemRequirements");
-
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        string title = $"Game-{i}";
-                        DateTime releaseDate = DateTime.Now.AddYears(-_random.Next(1, 10));
-                        string genre = _random.Next(1, 4) switch
-                        {
-                            1 => "Action",
-                            2 => "Adventure",
-                            3 => "Strategy",
-                            _ => "Unknown"
-                        };
-                        int developerID = developerIds[_random.Next(0, developerIds.Count)];
-                        string minSystemRequirements = "CPU: 2GHz, RAM: 4GB, HDD: 20GB";
-
-                        writer.WriteLine($"{title},{releaseDate.ToString("yyyy-MM-dd")},{genre},{developerID},{minSystemRequirements}");
-                    }
-                }
-
-                // Генерация CSV для таблицы Reviews
-                var userIds = GetAllUserIds(connection);
-                var gameDeveloperMapping = GetGameDeveloperMapping(connection);
-                using (StreamWriter writer = new StreamWriter("Reviews.csv"))
-                {
-                    writer.WriteLine("UserID,GameID,DeveloperID,ReviewText,GameRating,HoursPlayed,ReviewDate");
-
-                    for (int i = 0; i < 1000; i++)
-                    {
-                        int userID = userIds[_random.Next(0, userIds.Count)];
-                        int gameID = gameDeveloperMapping.Keys.ElementAt(_random.Next(0, gameDeveloperMapping.Count));
-                        int developerID = gameDeveloperMapping[gameID];
-                        string reviewText = _random.Next(1, 4) switch
-                        {
-                            1 => "Amazing Graphics!",
-                            2 => "This is so fun to play!",
-                            3 => "OK",
-                            _ => "Unknown"
-                        };
-                        int gameRating = _random.Next(1, 11);
-                        int hoursPlayed = _random.Next(1, 100);
-                        DateTime reviewDate = DateTime.Now.AddDays(-_random.Next(0, 365));
-
-                        writer.WriteLine($"{userID},{gameID},{developerID},{reviewText},{gameRating},{hoursPlayed},{reviewDate.ToString("yyyy-MM-dd")}");
-                    }
-                }
-            }
-
-            Console.WriteLine("CSV файлы успешно сгенерированы.");
-
-            
-            return;*/
-
 namespace src
 {
     internal class Program
@@ -295,7 +197,7 @@ namespace src
                     $"Game-{i}",
                     gdates[i - 1].ToString("yyyy-MM-dd"),
                     TextFaker.Sentence().Length > 100 ? TextFaker.Sentence().Substring(0, 100) : TextFaker.Sentence(),
-                    NumberFaker.Number(1, 764).ToString(),
+                    NumberFaker.Number(1, 382).ToString(),
                     NumberFaker.Number(1, 1000).ToString(),
                     Math.Round((decimal)random.NextDouble() * (100.00m - 0.00m) + 0.00m, 2).ToString(),
                     "Windows XP 2.0 + GHz 512 MB ОЗУ OpenGL 2.0 support 100 MB",

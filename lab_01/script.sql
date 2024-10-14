@@ -1,7 +1,7 @@
 -- Создание базы данных
 CREATE DATABASE GamingPlatform;
 GO
-
+ALTER DATABASE GamingPlatform SET TRUSTWORTHY ON;
 -- Использование базы данных
 USE GamingPlatform;
 GO

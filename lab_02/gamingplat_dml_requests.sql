@@ -8,7 +8,7 @@ SELECT Games.Title, Games.ReleaseDate
 FROM Games 
 JOIN Games G2 ON Games.DeveloperID = G2.DeveloperID
 WHERE Games.GameID <> G2.GameID
-  AND G2.Title = 'Game-900'
+  AND G2.Title = 'Game-5'
 ORDER BY Games.ReleaseDate;
 
 --2. Инструкция SELECT, использующая предикат BETWEEN
@@ -57,6 +57,8 @@ FROM Games;
 
 --8. Инструкция SELECT, использующая скалярные подзапросы в выражениях столбцов
 --Получение средней и минимальной цены на игру по конкретным заказам для каждой игры
+USE GamingPlatform
+GO
 SELECT GameID, Price,
        (SELECT AVG(Price) 
         FROM Orders
@@ -66,7 +68,7 @@ SELECT GameID, Price,
         WHERE Orders.GameID = Games.GameID) AS MinPrice,
        Title
 FROM Games
-WHERE CategoryID = 748;
+WHERE CategoryID = 200;
 
 --9. Инструкция SELECT, использующая простое выражение CASE
 --Получение всех заказов с меткой о том, в каком году они были сделаны (в этом году, прошлом или ранее)
@@ -210,10 +212,10 @@ GO
 -- Вставка данных о реферальных связях пользователей
 INSERT INTO UserReferrals (UserID, ReferredByUserID)
 VALUES
-(2, 1),  -- Пользователь 2 (Bob) был приглашён пользователем 1 (Alice)
-(3, 1),  -- Пользователь 3 (Charlie) был приглашён пользователем 1 (Alice)
-(4, 2),  -- Пользователь 4 (Dave) был приглашён пользователем 2 (Bob)
-(5, 3);  -- Пользователь 5 (Eve) был приглашён пользователем 3 (Charlie)
+(2, 1), +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+(3, 1), 
+(4, 2), 
+(5, 3);  
 GO
 WITH ReferralHierarchy (UserID, ReferredByUserID, Level) AS (
     -- Начальное выражение: выбираем пользователей, которых никто не пригласил
@@ -249,9 +251,33 @@ LEFT JOIN Orders O ON G.GameID = O.GameID;
 
 --25. Оконные функции для устранения дубликатов
 --Удаление дублирующихся строк с использованием ROW_NUMBER()
+USE GamingPlatform;
+GO
+INSERT INTO Games (Title, ReleaseDate, Description, CategoryID, DeveloperID, Price, MinSystemRequirements, Discontinued)
+VALUES
+('Game A', '2024-01-01', 'Exciting game A', 1, 1, 59.99, 'Windows 10, 8GB RAM, GTX 1060', 0),
+('Game A', '2024-01-01', 'Exciting game A', 1, 1, 59.99, 'Windows 10, 8GB RAM, GTX 1060', 0), -- дубликат
+('Game B', '2024-02-15', 'Adventure game B', 2, 2, 39.99, 'Windows 10, 4GB RAM, GTX 1050', 0),
+('Game C', '2024-03-01', 'Indie game C', 3, 3, 19.99, 'Windows 10, 2GB RAM, GTX 750', 1),
+('Game B', '2024-02-15', 'Adventure game B', 2, 2, 39.99, 'Windows 10, 4GB RAM, GTX 1050', 0); -- дубликат
 WITH GameDuplicates AS (
     SELECT GameID, Title, Price, ROW_NUMBER() OVER(PARTITION BY Title, Price ORDER BY GameID) AS RowNum
     FROM Games
 )
 DELETE FROM Games
 WHERE GameID IN (SELECT GameID FROM GameDuplicates WHERE RowNum > 1);
+
+
+
+
+-- доп задание
+-- найти заказы, где игры с самыми худшими отзывами
+SELECT o.OrderID, o.UserID, o.GameID, o.Price, o.Quantity, o.OrderDate
+FROM Orders o
+JOIN (SELECT GameID
+      FROM Reviews
+      WHERE GameRating = (SELECT MIN(GameRating)
+                          FROM Reviews
+                         )
+) AS WorstRatedGames
+ON o.GameID = WorstRatedGames.GameID;

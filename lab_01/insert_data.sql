@@ -4,7 +4,11 @@ SELECT *
 FROM tempdb.sys.tables 
 WHERE name LIKE '#TempTable%';
 DROP TABLE IF EXISTS #TempTable;
-
+DROP TABLE IF EXISTS #TempTable2;
+SET IDENTITY_INSERT Users OFF;
+SET IDENTITY_INSERT Games OFF;
+USE GamingPlatform;
+GO
 --  опирование данных в таблицу Users
 CREATE TABLE #TempTable
 (
@@ -15,7 +19,7 @@ CREATE TABLE #TempTable
     Country NVARCHAR(100),
     AccountStatus NVARCHAR(100)  -- временно используем строковый тип
 );
-BULK INSERT #TempTable
+BULK INSERT Users
 FROM 'C:\Users\User\Desktop\учеба\бауманка\5-sem\DB\lab_01\Users.csv'
 WITH
 (
@@ -23,22 +27,22 @@ WITH
     ROWTERMINATOR = '\n',
     FIRSTROW = 2
 );
-SET IDENTITY_INSERT Users ON;
-INSERT INTO Users (UserID, Username, Email, RegistrationDate, Country, AccountStatus)
-SELECT 
-    tt.UserID,  -- ќбращаемс€ через алиас, чтобы избежать возможных проблем с именами столбцов
-    tt.Username,
-    tt.Email,
-    tt.RegistrationDate,
-    tt.Country,
-    CASE 
-        WHEN tt.AccountStatus = '1\n' THEN 1
-        WHEN tt.AccountStatus = '0\n' THEN 0
-        ELSE 0  -- ћожно добавить ELSE дл€ обработки непредвиденных значений
-    END
-FROM #TempTable tt;
-SET IDENTITY_INSERT Users OFF;
-DROP TABLE IF EXISTS #TempTable;
+--SET IDENTITY_INSERT Users ON;
+--INSERT INTO Users (UserID, Username, Email, RegistrationDate, Country, AccountStatus)
+--SELECT 
+--    tt.UserID,  -- ќбращаемс€ через алиас, чтобы избежать возможных проблем с именами столбцов
+--    tt.Username,
+--    tt.Email,
+--    tt.RegistrationDate,
+--    tt.Country,
+--    CASE 
+--        WHEN tt.AccountStatus = '1\n' THEN 1
+--        WHEN tt.AccountStatus = '0\n' THEN 0
+--        ELSE 0  -- ћожно добавить ELSE дл€ обработки непредвиденных значений
+--    END
+--FROM #TempTable tt;
+--SET IDENTITY_INSERT Users OFF;
+--DROP TABLE IF EXISTS #TempTable;
 
 --  опирование данных в таблицу Developers
 BULK INSERT Developers
@@ -67,7 +71,7 @@ SELECT *
 FROM tempdb.sys.tables 
 WHERE name LIKE '#TempTable%';
 DROP TABLE IF EXISTS #TempTable;
-CREATE TABLE #TempTable
+CREATE TABLE #TempTable2
 (
     GameID INT IDENTITY(1,1),
     Title NVARCHAR(255),
@@ -79,7 +83,7 @@ CREATE TABLE #TempTable
     MinSystemRequirements NVARCHAR(MAX),
 	Discontinued NVARCHAR(100)  -- временно используем строковый тип
 );
-BULK INSERT #TempTable
+BULK INSERT #TempTable2
 FROM 'C:\Users\User\Desktop\учеба\бауманка\5-sem\DB\lab_01\Games.csv'
 WITH
 (
@@ -95,9 +99,9 @@ SELECT
         WHEN Discontinued = '1' THEN 1
         WHEN Discontinued = '0' THEN 0
     END
-FROM #TempTable;
+FROM #TempTable2;
 SET IDENTITY_INSERT Games OFF;
-DROP TABLE #TempTable;
+DROP TABLE #TempTable2;
 
 
 
