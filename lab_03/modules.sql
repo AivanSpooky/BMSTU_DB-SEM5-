@@ -29,7 +29,9 @@ END;
 GO
 
 -- ВЫЗОВ
+SET STATISTICS TIME ON;
 SELECT dbo.GetUserRegistrationDays(1) AS RegistrationDays;
+SET STATISTICS TIME OFF;
 
 
 
@@ -59,8 +61,10 @@ GO
 
 
 -- ВЫЗОВ
+SET STATISTICS TIME ON;
 SELECT *
 FROM dbo.GetGamesByCategory(N'Action');
+SET STATISTICS TIME OFF;
 
 --=== ЗАЩИТА ===
 -- Вывести все заказы, в которых купили игру с именем @GameTitle
