@@ -1,45 +1,45 @@
--- »спользуем базу данных 
+пїњ-- –Ш—Б–њ–Њ–ї—М–Ј—Г–µ–Љ –±–∞–Ј—Г –і–∞–љ–љ—Л—Е 
 USE GamingPlatform;
 GO
 
 --==========================
--- —≈ ÷»я ”—“јЌќ¬ » ‘Ћј√ќ¬
+-- –°–Х–Ъ–¶–Ш–ѓ –£–°–Ґ–Р–Э–Ю–Т–Ъ–Ш –§–Ы–Р–У–Ю–Т
 --==========================
--- ¬ключение clr
+-- –Т–Ї–ї—О—З–µ–љ–Є–µ clr
 EXEC sp_configure 'clr enabled', 1;
 RECONFIGURE;
--- ¬ключение расширенных настроек
+-- –Т–Ї–ї—О—З–µ–љ–Є–µ —А–∞—Б—И–Є—А–µ–љ–љ—Л—Е –љ–∞—Б—В—А–Њ–µ–Ї
 EXEC sp_configure 'show advanced options', 1;
 RECONFIGURE;
--- ќтключение безопасности
+-- –Ю—В–Ї–ї—О—З–µ–љ–Є–µ –±–µ–Ј–Њ–њ–∞—Б–љ–Њ—Б—В–Є
 EXEC sp_configure 'clr strict security', 0;
 RECONFIGURE;
 
 
 --==================
--- —≈ ÷»я «ј√–”« »
+-- –°–Х–Ъ–¶–Ш–ѓ –Ч–Р–У–†–£–Ч–Ъ–Ш
 --==================
--- «ј√–”« ј dll
+-- –Ч–Р–У–†–£–Ч–Ъ–Р dll
 CREATE ASSEMBLY MyAssembly 
-FROM 'C:\Users\User\Desktop\учеба\бауманка\5-sem\DB\lab_04\ClassLibrary1\ClassLibrary1\obj\Debug\ClassLibrary1.dll'
+FROM 'C:\Users\User\Desktop\—Г—З–µ–±–∞\–±–∞—Г–Љ–∞–љ–Ї–∞\5-sem\DB\lab_04\ClassLibrary1\ClassLibrary1\obj\Debug\ClassLibrary1.dll'
 WITH PERMISSION_SET = EXTERNAL_ACCESS;
 
 --==================
--- —≈ ÷»я —ќ«ƒјЌ»я
+-- –°–Х–Ъ–¶–Ш–ѓ –°–Ю–Ч–Ф–Р–Э–Ш–ѓ
 --==================
--- 1. —ќ«ƒјЌ»≈ ‘”Ќ ÷»» dbo.MyGetUserRegistrationDays
+-- 1. –°–Ю–Ч–Ф–Р–Э–Ш–Х –§–£–Э–Ъ–¶–Ш–Ш dbo.MyGetUserRegistrationDays
 CREATE FUNCTION dbo.MyGetUserRegistrationDays(@UserID INT)
 RETURNS INT
 AS EXTERNAL NAME MyAssembly.[ClassLibrary1.SqlCLRFunctions].GetUserRegistrationDays;
--- 2. —ќ«ƒјЌ»≈ ј√√–≈√ј“Ќќ… ‘”Ќ ÷»» dbo.MyGetMaxGamePrice
+-- 2. –°–Ю–Ч–Ф–Р–Э–Ш–Х –Р–У–У–†–Х–У–Р–Ґ–Э–Ю–Щ –§–£–Э–Ъ–¶–Ш–Ш dbo.MyGetMaxGamePrice
 CREATE AGGREGATE dbo.MyGetMaxGamePrice(@price DECIMAL(10, 2))
 RETURNS DECIMAL(10, 2)
 EXTERNAL NAME MyAssembly.[ClassLibrary1.GetMaxGamePrice];
--- 3. —ќ«ƒјЌ»≈ “јЅЋ»„Ќќ… ‘”Ќ ÷»» dbo.MyGetGamesByCategory
+-- 3. –°–Ю–Ч–Ф–Р–Э–Ш–Х –Ґ–Р–С–Ы–Ш–І–Э–Ю–Щ –§–£–Э–Ъ–¶–Ш–Ш dbo.MyGetGamesByCategory
 CREATE FUNCTION dbo.MyGetGamesByCategory (@Category NVARCHAR(255))
 RETURNS TABLE (GameID INT, Title NVARCHAR(255), Price DECIMAL(10,2))
 AS EXTERNAL NAME MyAssembly.[ClassLibrary1.SqlCLRTableFunctions].GetGamesByCategory;
--- 4. —ќ«ƒјЌ»≈ ѕ–ќ÷≈ƒ”–џ 
+-- 4. –°–Ю–Ч–Ф–Р–Э–Ш–Х –Я–†–Ю–¶–Х–Ф–£–†–Ђ 
 CREATE PROCEDURE dbo.MyAddNewUser (
     @Username NVARCHAR(255),
     @Email NVARCHAR(255),
@@ -47,12 +47,12 @@ CREATE PROCEDURE dbo.MyAddNewUser (
     @Country NVARCHAR(255),
     @AccountStatus BIT)
 AS EXTERNAL NAME MyAssembly.[ClassLibrary1.SqlCLRProcedures].AddNewUser;
--- 5. —ќ«ƒјЌ»≈ “–»√√≈–ј
+-- 5. –°–Ю–Ч–Ф–Р–Э–Ш–Х –Ґ–†–Ш–У–У–Х–†–Р
 CREATE TRIGGER trg_MyInsteadOfInsertOrders
 ON Orders
 INSTEAD OF INSERT
 AS EXTERNAL NAME MyAssembly.[ClassLibrary1.SqlCLRTriggers].InsteadOfInsertOrders;
--- 6. —ќ«ƒјЌ»≈ ѕќЋ№«ќ¬ј“≈Ћ№— ќ√ќ “»ѕј
+-- 6. –°–Ю–Ч–Ф–Р–Э–Ш–Х –Я–Ю–Ы–ђ–Ч–Ю–Т–Р–Ґ–Х–Ы–ђ–°–Ъ–Ю–У–Ю –Ґ–Ш–Я–Р
 CREATE TYPE MyUserProfile
 EXTERNAL NAME MyAssembly.[ClassLibrary1.UserProfile];
 CREATE TABLE MyUsersWithProfile (
@@ -62,65 +62,65 @@ CREATE TABLE MyUsersWithProfile (
 GO
 
 --==================
--- —≈ ÷»я ¬џ«ќ¬ј
+-- –°–Х–Ъ–¶–Ш–ѓ –Т–Ђ–Ч–Ю–Т–Р
 --==================
--- ¬џ«ќ¬ dbo.MyGetUserRegistrationDays
+-- –Т–Ђ–Ч–Ю–Т dbo.MyGetUserRegistrationDays
 SET STATISTICS TIME ON;
 SELECT dbo.MyGetUserRegistrationDays(1) AS RegistrationDays;
 SET STATISTICS TIME OFF;
 
--- ¬џ«ќ¬ dbo.GetMaxGamePrice
+-- –Т–Ђ–Ч–Ю–Т dbo.GetMaxGamePrice
 SET STATISTICS TIME ON;
 SELECT GameID, Title, Price
 FROM Games
 WHERE Price > (SELECT dbo.MyGetMaxGamePrice(Price) / 2 FROM Games);
 SET STATISTICS TIME OFF;
 
--- ¬џ«ќ¬ dbo.GetGamesByCategory
+-- –Т–Ђ–Ч–Ю–Т dbo.GetGamesByCategory
 SET STATISTICS TIME ON;
 SELECT * FROM dbo.MyGetGamesByCategory('Action');
 SET STATISTICS TIME OFF;
 
--- ¬џ«ќ¬ dbo.AddNewUser
+-- –Т–Ђ–Ч–Ю–Т dbo.AddNewUser
 EXEC dbo.MyAddNewUser 'Nisu', 'nisu@example.com', '2024-10-12', 'Russian Federation', 1;
--- удаление
+-- —Г–і–∞–ї–µ–љ–Є–µ
 DELETE FROM Users
 WHERE Username = 'Nisu';
 
--- ј “»¬ј÷»я “–»√√≈–ј (Ќ≈ѕ–ј¬»Ћ№Ќјя)
+-- –Р–Ъ–Ґ–Ш–Т–Р–¶–Ш–ѓ –Ґ–†–Ш–У–У–Х–†–Р (–Э–Х–Я–†–Р–Т–Ш–Ы–ђ–Э–Р–ѓ)
 INSERT INTO Orders (UserID, GameID, Price, Quantity, OrderDate)
 VALUES (1, 1, -50.00, 2, '2024-10-12');
 
--- ¬—“ј¬ ј ¬ “јЅЋ»÷” — ѕќЋ№«ќ¬ј“≈Ћ№— »ћ “»ѕќћ
+-- –Т–°–Ґ–Р–Т–Ъ–Р –Т –Ґ–Р–С–Ы–Ш–¶–£ –° –Я–Ю–Ы–ђ–Ч–Ю–Т–Р–Ґ–Х–Ы–ђ–°–Ъ–Ш–Ь –Ґ–Ш–Я–Ю–Ь
 INSERT INTO MyUsersWithProfile (UserID, Profile)
 VALUES (1, CAST('Nisu,nisu@example.com' AS MyUserProfile));
 GO
--- ¬џ¬ќƒ “јЅЋ»÷џ
+-- –Т–Ђ–Т–Ю–Ф –Ґ–Р–С–Ы–Ш–¶–Ђ
 SELECT * FROM MyUsersWithProfile;
--- ¬џ¬ќƒ ѕќЋ№«ќ¬ј“≈Ћ№— ќ√ќ “»ѕј
+-- –Т–Ђ–Т–Ю–Ф –Я–Ю–Ы–ђ–Ч–Ю–Т–Р–Ґ–Х–Ы–ђ–°–Ъ–Ю–У–Ю –Ґ–Ш–Я–Р
 SELECT UserID, Profile.ToString() AS ProfileString
 FROM MyUsersWithProfile;
 GO
 
 
 --==================
--- —≈ ÷»я ”ƒјЋ≈Ќ»я
+-- –°–Х–Ъ–¶–Ш–ѓ –£–Ф–Р–Ы–Х–Э–Ш–ѓ
 --==================
--- ”ƒјЋ≈Ќ»≈ UsersWithProfile
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х UsersWithProfile
 DROP TABLE IF EXISTS MyUsersWithProfile
--- ”ƒјЋ≈Ќ»≈ UserProfile
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х UserProfile
 DROP TYPE IF EXISTS MyUserProfile
--- ”ƒјЋ≈Ќ»≈ dbo.trg_InsteadOfInsertOrders
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х dbo.trg_InsteadOfInsertOrders
 DROP TRIGGER IF EXISTS dbo.trg_MyInsteadOfInsertOrders
--- ”ƒјЋ≈Ќ»≈ dbo.AddNewUser
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х dbo.AddNewUser
 DROP PROCEDURE IF EXISTS dbo.MyAddNewUser
--- ”ƒјЋ≈Ќ»≈ dbo.GetUserRegistrationDays
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х dbo.GetUserRegistrationDays
 DROP FUNCTION IF EXISTS dbo.MyGetUserRegistrationDays;
--- ”ƒјЋ≈Ќ»≈ dbo.GetMaxGamePrice
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х dbo.GetMaxGamePrice
 DROP AGGREGATE IF EXISTS dbo.MyGetMaxGamePrice;
--- ”ƒјЋ≈Ќ»≈ dbo.GetGamesByCategory
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х dbo.GetGamesByCategory
 DROP FUNCTION IF EXISTS dbo.MyGetGamesByCategory;
--- ”ƒјЋ≈Ќ»≈ MyAssembly
+-- –£–Ф–Р–Ы–Х–Э–Ш–Х MyAssembly
 DROP ASSEMBLY IF EXISTS MyAssembly;
 
 
@@ -133,11 +133,11 @@ RETURNS NVARCHAR(255)
 AS
 BEGIN
     DECLARE @CleanedTitle NVARCHAR(255) = @Title;
-    -- ”даление символов - и _
+    -- –£–і–∞–ї–µ–љ–Є–µ —Б–Є–Љ–≤–Њ–ї–Њ–≤ - –Є _
     SET @CleanedTitle = REPLACE(@CleanedTitle, '-', ' ');
     SET @CleanedTitle = REPLACE(@CleanedTitle, '_', ' ');
 
-    -- ”даление всех цифр
+    -- –£–і–∞–ї–µ–љ–Є–µ –≤—Б–µ—Е —Ж–Є—Д—А
     DECLARE @i INT = 0;
     WHILE @i <= 9
     BEGIN
