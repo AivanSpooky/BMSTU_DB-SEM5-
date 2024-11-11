@@ -1,0 +1,19 @@
+{
+    "type": "array",
+    "items":
+    {
+      "type": "object",
+      "properties":
+      {
+        "Title": { "type": "string" },
+        "ReleaseDate": { "type": "string", "format": "date" },
+        "Description": { "type": "string" },
+        "CategoryID": { "type": "integer" },
+        "DeveloperID": { "type": "integer" },
+        "Price": { "type": "number", "minimum": 0 },
+        "MinSystemRequirements": { "type": "string" },
+        "Discontinued": { "type": "boolean" }
+      },
+      "required": ["Title", "ReleaseDate", "CategoryID", "DeveloperID", "Price"]
+    }
+  }

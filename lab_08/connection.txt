@@ -1,0 +1,3 @@
+jdbc:sqlserver://LAPTOP-7106M2BU;databaseName=GamingPlatform;trustServerCertificate=true
+com.microsoft.sqlserver.jdbc.SQLServerDriver
+C:\Program Files (x86)\Microsoft JDBC DRIVER 12.8 for SQL Server\sqljdbc_12.8\rus\jars\mssql-jdbc-12.8.1.jre8.jar

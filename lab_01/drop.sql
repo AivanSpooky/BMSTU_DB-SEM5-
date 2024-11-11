@@ -5,7 +5,7 @@ SELECT
     loginame, 
     status 
 FROM sys.sysprocesses
-WHERE dbid = DB_ID('GamingPlatform');
+WHERE dbid = DB_ID('RK2');
 GO
 -- Убить существующее подключение
 KILL 51;
